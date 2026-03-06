@@ -26,9 +26,9 @@ class CategorySeeder extends Seeder
         ]);
 
         Category::create([
-            'name' => 'Kids Special',
-            'slug' => 'kids',
-            'description' => 'Tasty meals for little ones',
+            'name' => 'Tasty Bites',
+            'slug' => 'tasty-bites',
+            'description' => 'Shawarma, quesadilla, wings & more',
             'emoji' => '🍗',
             'sort_order' => 3,
         ]);
@@ -39,6 +39,14 @@ class CategorySeeder extends Seeder
             'description' => 'Fresh plant-based options',
             'emoji' => '🥗',
             'sort_order' => 4,
+        ]);
+
+        Category::create([
+            'name' => 'Kids Special',
+            'slug' => 'kids',
+            'description' => 'Tasty meals for little ones',
+            'emoji' => '🧒',
+            'sort_order' => 5,
         ]);
     }
 }
