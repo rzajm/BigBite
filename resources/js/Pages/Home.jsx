@@ -1,41 +1,6 @@
 import SiteLayout from '@/Layouts/SiteLayout';
 import { Head, Link } from '@inertiajs/react';
 
-const featuredItems = [
-    {
-        id: 1,
-        name: 'BigBite Special Burger',
-        description: 'Double beef patty, truffle mayo, iceberg, tomato, pickled cucumber, caramelized onion, BigBite special burger sauce',
-        price: 3290,
-        image: null,
-        allergens: ['Gluten'],
-    },
-    {
-        id: 2,
-        name: 'Doner Burger',
-        description: 'Special doner chicken, garlic mayo, tomato, onion, iceberg',
-        price: 2790,
-        image: null,
-        allergens: ['Gluten'],
-    },
-    {
-        id: 3,
-        name: 'BAR.BQ Burger',
-        description: 'Beef patty, tomato, onion, iceberg, BBQ sauce',
-        price: 2690,
-        image: null,
-        allergens: ['Gluten', 'Milk'],
-    },
-    {
-        id: 4,
-        name: 'Falafel Wrap',
-        description: 'Falafel, arugula, tahini sauce, hummus',
-        price: 2290,
-        image: null,
-        allergens: ['Gluten'],
-    },
-];
-
 function HeroSection() {
     return (
         <section className="relative bg-bb-dark overflow-hidden">
@@ -106,7 +71,7 @@ function HeroSection() {
     );
 }
 
-function FeaturedMenuSection() {
+function FeaturedMenuSection({ items = [] }) {
     return (
         <section className="py-16 sm:py-20 bg-bb-cream">
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -124,13 +89,13 @@ function FeaturedMenuSection() {
                     </p>
                 </div>
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-                    {featuredItems.map((item) => (
+                    {items.map((item) => (
                         <div
                             key={item.id}
                             className="bg-white rounded-2xl shadow-md hover:shadow-xl transition-all duration-300 hover:-translate-y-1 overflow-hidden group"
                         >
                             <div className="h-48 bg-gradient-to-br from-bb-dark to-bb-dark-50 flex items-center justify-center relative overflow-hidden">
-                                <span className="text-6xl">🍔</span>
+                                <span className="text-6xl">{item.emoji || '🍔'}</span>
                                 <div className="absolute inset-0 bg-bb-red/0 group-hover:bg-bb-red/10 transition-colors duration-300"></div>
                             </div>
                             <div className="p-5">
@@ -145,12 +110,12 @@ function FeaturedMenuSection() {
                                         {item.price.toLocaleString()} Ft
                                     </span>
                                     <div className="flex gap-1">
-                                        {item.allergens.map((a) => (
+                                        {item.allergens?.map((a) => (
                                             <span
-                                                key={a}
+                                                key={a.id}
                                                 className="text-xs bg-bb-cream px-2 py-0.5 rounded-full text-gray-500"
                                             >
-                                                {a}
+                                                {a.name}
                                             </span>
                                         ))}
                                     </div>
@@ -269,31 +234,7 @@ function MapSection() {
     );
 }
 
-function ReviewsSection() {
-    const reviews = [
-        {
-            id: 1,
-            author: 'Anna K.',
-            rating: 5,
-            text: 'Best burgers in Budapest! The BigBite Special is absolutely amazing. You can really taste the quality of the ingredients.',
-            time: '2 weeks ago',
-        },
-        {
-            id: 2,
-            author: 'Márk T.',
-            rating: 5,
-            text: 'The doner wrap is incredible — perfectly seasoned chicken with fresh vegetables. Will definitely come back!',
-            time: '1 month ago',
-        },
-        {
-            id: 3,
-            author: 'Sophie L.',
-            rating: 4,
-            text: 'Great falafel options for vegetarians. The hummus plate is very generous. Nice atmosphere too.',
-            time: '1 month ago',
-        },
-    ];
-
+function ReviewsSection({ reviews = [] }) {
     return (
         <section className="py-16 bg-white">
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -306,45 +247,65 @@ function ReviewsSection() {
                             <span key={s}>★</span>
                         ))}
                     </div>
-                    <p className="text-gray-500 text-sm">Based on Google Reviews</p>
+                    <p className="text-gray-500 text-sm">Based on guest reviews</p>
                 </div>
 
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                    {reviews.map((review) => (
-                        <div
-                            key={review.id}
-                            className="bg-bb-cream rounded-2xl p-6 shadow-sm hover:shadow-md transition-shadow"
-                        >
-                            <div className="flex items-center space-x-1 text-bb-orange mb-3">
-                                {[1, 2, 3, 4, 5].map((s) => (
-                                    <span key={s} className={s <= review.rating ? '' : 'opacity-30'}>
-                                        ★
+                {reviews.length > 0 ? (
+                    <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                        {reviews.map((review) => (
+                            <div
+                                key={review.id}
+                                className="bg-bb-cream rounded-2xl p-6 shadow-sm hover:shadow-md transition-shadow"
+                            >
+                                <div className="flex items-center space-x-1 text-bb-orange mb-3">
+                                    {[1, 2, 3, 4, 5].map((s) => (
+                                        <span key={s} className={s <= review.rating ? '' : 'opacity-30'}>
+                                            ★
+                                        </span>
+                                    ))}
+                                </div>
+                                <p className="text-gray-700 text-sm leading-relaxed mb-4 italic">
+                                    "{review.comment}"
+                                </p>
+                                <div className="flex items-center justify-between">
+                                    <span className="font-semibold text-bb-dark text-sm">
+                                        {review.user?.name || 'Guest'}
                                     </span>
-                                ))}
+                                    <span className="text-gray-400 text-xs">
+                                        {new Date(review.created_at).toLocaleDateString('en', {
+                                            year: 'numeric',
+                                            month: 'short',
+                                            day: 'numeric',
+                                        })}
+                                    </span>
+                                </div>
                             </div>
-                            <p className="text-gray-700 text-sm leading-relaxed mb-4 italic">
-                                "{review.text}"
-                            </p>
-                            <div className="flex items-center justify-between">
-                                <span className="font-semibold text-bb-dark text-sm">{review.author}</span>
-                                <span className="text-gray-400 text-xs">{review.time}</span>
-                            </div>
-                        </div>
-                    ))}
-                </div>
+                        ))}
+                    </div>
+                ) : (
+                    <div className="text-center py-8">
+                        <p className="text-gray-500">Be the first to leave a review!</p>
+                        <Link
+                            href="/reviews/create"
+                            className="inline-block mt-4 bg-bb-red hover:bg-bb-red-600 text-white px-6 py-3 rounded-full font-semibold transition-all duration-300"
+                        >
+                            Write a Review
+                        </Link>
+                    </div>
+                )}
             </div>
         </section>
     );
 }
 
-export default function Home() {
+export default function Home({ featuredItems = [], reviews = [] }) {
     return (
         <SiteLayout>
             <Head title="Home" />
 
             <HeroSection />
-            <FeaturedMenuSection />
-            <ReviewsSection />
+            <FeaturedMenuSection items={featuredItems} />
+            <ReviewsSection reviews={reviews} />
             <OpeningHoursSection />
             <MapSection />
         </SiteLayout>

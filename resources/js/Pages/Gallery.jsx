@@ -1,6 +1,6 @@
 import SiteLayout from '@/Layouts/SiteLayout';
 import { Head } from '@inertiajs/react';
-import { useState } from 'react';
+import { useState, useMemo } from 'react';
 
 const galleryCategories = [
     { id: 'all', name: 'All' },
@@ -9,28 +9,25 @@ const galleryCategories = [
     { id: 'events', name: 'Events' },
 ];
 
-const galleryImages = [
-    { id: 1, category: 'food', title: 'BigBite Special Burger', emoji: '🍔', color: 'from-red-900 to-orange-900' },
-    { id: 2, category: 'food', title: 'Doner Wrap', emoji: '🌮', color: 'from-amber-900 to-yellow-900' },
-    { id: 3, category: 'food', title: 'Falafel Hummus Plate', emoji: '🧆', color: 'from-green-900 to-emerald-900' },
-    { id: 4, category: 'interior', title: 'Restaurant Entrance', emoji: '🏪', color: 'from-bb-dark to-gray-800' },
-    { id: 5, category: 'food', title: 'Mezze Plate', emoji: '🥗', color: 'from-lime-900 to-green-900' },
-    { id: 6, category: 'interior', title: 'Cozy Seating Area', emoji: '🪑', color: 'from-stone-800 to-stone-900' },
-    { id: 7, category: 'food', title: 'Chicken Burger', emoji: '🍔', color: 'from-orange-900 to-red-900' },
-    { id: 8, category: 'events', title: 'Opening Night', emoji: '🎉', color: 'from-purple-900 to-pink-900' },
-    { id: 9, category: 'food', title: 'Fresh Ingredients', emoji: '🥬', color: 'from-green-900 to-teal-900' },
-    { id: 10, category: 'interior', title: 'Kitchen in Action', emoji: '👨‍🍳', color: 'from-gray-800 to-gray-900' },
-    { id: 11, category: 'events', title: 'Weekend Rush', emoji: '🎊', color: 'from-blue-900 to-indigo-900' },
-    { id: 12, category: 'food', title: 'Double Cheese Burger', emoji: '🧀', color: 'from-yellow-900 to-amber-900' },
-];
+const colorMap = {
+    food: 'from-red-900 to-orange-900',
+    interior: 'from-bb-dark to-gray-800',
+    events: 'from-purple-900 to-pink-900',
+};
 
-export default function Gallery() {
+const emojiMap = {
+    food: '🍔',
+    interior: '🏪',
+    events: '🎉',
+};
+
+export default function Gallery({ images = [] }) {
     const [activeCategory, setActiveCategory] = useState('all');
     const [lightboxImage, setLightboxImage] = useState(null);
 
-    const filteredImages = galleryImages.filter(
+    const filteredImages = useMemo(() => images.filter(
         (img) => activeCategory === 'all' || img.category === activeCategory
-    );
+    ), [images, activeCategory]);
 
     return (
         <SiteLayout>
