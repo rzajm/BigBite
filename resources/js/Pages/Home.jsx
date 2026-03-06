@@ -76,9 +76,17 @@ function HeroSection() {
                             href="https://wolt.com"
                             target="_blank"
                             rel="noopener noreferrer"
-                            className="bg-bb-orange hover:bg-bb-orange-600 text-white px-8 py-4 rounded-full text-lg font-semibold transition-all duration-300 hover:scale-105 shadow-lg shadow-bb-orange/25"
+                            className="bg-[#009DE0] hover:bg-[#0087C0] text-white px-8 py-4 rounded-full text-lg font-semibold transition-all duration-300 hover:scale-105 shadow-lg shadow-[#009DE0]/25"
                         >
                             🛵 Order on Wolt
+                        </a>
+                        <a
+                            href="https://www.foodora.hu"
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="bg-[#D70F64] hover:bg-[#B80D55] text-white px-8 py-4 rounded-full text-lg font-semibold transition-all duration-300 hover:scale-105 shadow-lg shadow-[#D70F64]/25"
+                        >
+                            🛵 Order on Foodora
                         </a>
                         <Link
                             href="/reservations/create"
