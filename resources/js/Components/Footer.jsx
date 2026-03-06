@@ -9,15 +9,15 @@ export default function Footer() {
                 <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
                     <div className="md:col-span-1">
                         <Link href="/" className="inline-block mb-4">
-                            <span className="text-2xl font-bold">
-                                <span className="text-bb-red font-display">Big</span>
-                                <span className="text-white font-display"> Bite</span>
-                            </span>
+                            <img
+                                src="/images/Big Bite logo.png"
+                                alt="Big Bite - Burgers, Wraps, Doner"
+                                className="h-[6.5rem] w-auto"
+                            />
                         </Link>
                         <p className="text-sm text-gray-500 italic mb-4">
                             "Restaurant-quality taste, street-food soul"
                         </p>
-                        <p className="text-sm">Burgers • Wraps • Doner</p>
                     </div>
                     <div>
                         <h3 className="text-bb-gold font-semibold text-sm uppercase tracking-wider mb-4">

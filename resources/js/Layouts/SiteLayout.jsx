@@ -17,19 +17,18 @@ export default function SiteLayout({ children }) {
     const currentUrl = usePage().url;
 
     return (
-        <div className="min-h-screen flex flex-col bg-bb-cream">            <nav className="bg-bb-dark sticky top-0 z-50 shadow-lg">
+        <div className="min-h-screen flex flex-col bg-bb-cream">
+            <nav className="bg-bb-dark sticky top-0 z-50 shadow-lg">
                 <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                    <div className="flex justify-between items-center h-20">                        <Link href="/" className="flex-shrink-0">
-                            <div className="flex items-center space-x-2">
-                                <span className="text-2xl font-bold">
-                                    <span className="text-bb-red font-display">Big</span>
-                                    <span className="text-white font-display"> Bite</span>
-                                </span>
-                                <span className="hidden sm:inline text-bb-gold text-xs tracking-widest uppercase">
-                                    Burgers • Wraps • Doner
-                                </span>
-                            </div>
-                        </Link>                        <div className="hidden md:flex items-center space-x-1">
+                    <div className="flex justify-between items-center h-20">
+                        <Link href="/" className="flex-shrink-0">
+                            <img
+                                src="/images/Big Bite logo.png"
+                                alt="Big Bite - Burgers, Wraps, Doner"
+                                className="h-[5.2rem] w-auto"
+                            />
+                        </Link>
+                        <div className="hidden md:flex items-center space-x-1">
                             {navLinks.map((link) => (
                                 <Link
                                     key={link.name}
@@ -43,7 +42,8 @@ export default function SiteLayout({ children }) {
                                     {link.name}
                                 </Link>
                             ))}
-                        </div>                        <div className="hidden md:flex items-center space-x-3">
+                        </div>
+                        <div className="hidden md:flex items-center space-x-3">
                             <a
                                 href="https://wolt.com"
                                 target="_blank"
@@ -84,7 +84,8 @@ export default function SiteLayout({ children }) {
                                     </Link>
                                 </div>
                             )}
-                        </div>                        <button
+                        </div>
+                        <button
                             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
                             className="md:hidden text-gray-300 hover:text-white p-2"
                         >
@@ -97,7 +98,8 @@ export default function SiteLayout({ children }) {
                             </svg>
                         </button>
                     </div>
-                </div>                {mobileMenuOpen && (
+                </div>
+                {mobileMenuOpen && (
                     <div className="md:hidden bg-bb-dark-100 border-t border-white/10 pb-4">
                         <div className="px-4 pt-2 space-y-1">
                             {navLinks.map((link) => (
@@ -152,9 +154,11 @@ export default function SiteLayout({ children }) {
                         </div>
                     </div>
                 )}
-            </nav>            <main className="flex-1">
+            </nav>
+            <main className="flex-1">
                 {children}
-            </main>            <Footer />
+            </main>
+            <Footer />
         </div>
     );
 }
