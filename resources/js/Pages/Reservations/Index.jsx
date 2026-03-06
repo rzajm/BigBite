@@ -1,24 +1,5 @@
 import SiteLayout from '@/Layouts/SiteLayout';
-import { Head, Link } from '@inertiajs/react';
-
-const reservations = [
-    {
-        id: 1,
-        date: '2026-03-05',
-        time: '19:00',
-        party_size: 4,
-        status: 'confirmed',
-        special_requests: 'Birthday celebration',
-    },
-    {
-        id: 2,
-        date: '2026-03-10',
-        time: '12:30',
-        party_size: 2,
-        status: 'pending',
-        special_requests: '',
-    },
-];
+import { Head, Link, router, usePage } from '@inertiajs/react';
 
 const statusStyles = {
     pending: 'bg-yellow-100 text-yellow-800',
@@ -32,7 +13,15 @@ const statusIcons = {
     cancelled: '❌',
 };
 
-export default function Index() {
+export default function Index({ reservations = [] }) {
+    const { flash } = usePage().props;
+
+    const handleCancel = (id) => {
+        if (confirm('Are you sure you want to cancel this reservation?')) {
+            router.delete(route('reservations.destroy', id));
+        }
+    };
+
     return (
         <SiteLayout>
             <Head title="My Reservations" />
@@ -55,12 +44,18 @@ export default function Index() {
                 <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
                     <div className="flex justify-end mb-6">
                         <Link
-                            href="/reservations/create"
+                            href={route('reservations.create')}
                             className="bg-bb-red hover:bg-bb-red-600 text-white px-6 py-2.5 rounded-full text-sm font-semibold transition-all duration-300 hover:scale-105 shadow-md"
                         >
                             + New Reservation
                         </Link>
                     </div>
+
+                    {flash?.success && (
+                        <div className="bg-green-50 border border-green-200 rounded-xl p-4 mb-6 text-green-800 text-sm font-medium">
+                            ✅ {flash.success}
+                        </div>
+                    )}
 
                     {reservations.length === 0 ? (
                         <div className="bg-white rounded-2xl shadow-sm p-12 text-center">
@@ -72,7 +67,7 @@ export default function Index() {
                                 Book your first table at Big Bite!
                             </p>
                             <Link
-                                href="/reservations/create"
+                                href={route('reservations.create')}
                                 className="inline-block bg-bb-red hover:bg-bb-red-600 text-white px-6 py-3 rounded-full font-semibold transition-all duration-300"
                             >
                                 Reserve a Table
@@ -114,9 +109,20 @@ export default function Index() {
                                         </div>
 
                                         {res.status !== 'cancelled' && (
-                                            <button className="text-sm text-red-500 hover:text-red-700 font-medium transition-colors self-start sm:self-center">
-                                                Cancel
-                                            </button>
+                                            <div className="flex items-center space-x-3 self-start sm:self-center">
+                                                <Link
+                                                    href={route('reservations.edit', res.id)}
+                                                    className="text-sm text-bb-red hover:text-bb-red-600 font-medium transition-colors"
+                                                >
+                                                    Edit
+                                                </Link>
+                                                <button
+                                                    onClick={() => handleCancel(res.id)}
+                                                    className="text-sm text-red-500 hover:text-red-700 font-medium transition-colors"
+                                                >
+                                                    Cancel
+                                                </button>
+                                            </div>
                                         )}
                                     </div>
                                 </div>

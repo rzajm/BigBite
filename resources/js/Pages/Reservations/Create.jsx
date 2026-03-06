@@ -1,6 +1,6 @@
 import SiteLayout from '@/Layouts/SiteLayout';
-import { Head, useForm } from '@inertiajs/react';
-import { useState, useMemo } from 'react';
+import { Head, useForm, usePage } from '@inertiajs/react';
+import { useMemo } from 'react';
 
 function generateTimeSlots() {
     const slots = [];
@@ -17,7 +17,7 @@ const timeSlots = generateTimeSlots();
 const partySizes = [1, 2, 3, 4, 5, 6, 7, 8];
 
 export default function Create() {
-    const [submitted, setSubmitted] = useState(false);
+    const { flash } = usePage().props;
 
     const { data, setData, post, processing, errors, reset } = useForm({
         guest_name: '',
@@ -43,7 +43,7 @@ export default function Create() {
 
     const handleSubmit = (e) => {
         e.preventDefault();
-        setSubmitted(true);
+        post(route('reservations.store'));
     };
 
     return (
@@ -69,27 +69,13 @@ export default function Create() {
 
             <section className="py-12 bg-bb-cream">
                 <div className="max-w-2xl mx-auto px-4 sm:px-6 lg:px-8">
-                    {submitted ? (
+                    {flash?.success ? (
                         <div className="bg-white rounded-2xl shadow-md p-8 text-center">
                             <span className="text-5xl block mb-4">🎉</span>
                             <h2 className="text-2xl font-bold font-display text-bb-dark mb-2">
                                 Reservation Submitted!
                             </h2>
-                            <p className="text-gray-600 mb-6">
-                                We'll confirm your reservation shortly via email.
-                                <br />
-                                <strong>{data.date}</strong> at <strong>{data.time}</strong> for{' '}
-                                <strong>{data.party_size} {Number(data.party_size) === 1 ? 'person' : 'people'}</strong>
-                            </p>
-                            <button
-                                onClick={() => {
-                                    setSubmitted(false);
-                                    reset();
-                                }}
-                                className="bg-bb-red hover:bg-bb-red-600 text-white px-6 py-3 rounded-full font-semibold transition-all duration-300"
-                            >
-                                Make Another Reservation
-                            </button>
+                            <p className="text-gray-600 mb-6">{flash.success}</p>
                         </div>
                     ) : (
                         <div className="bg-white rounded-2xl shadow-md p-8">
@@ -110,6 +96,7 @@ export default function Create() {
                                         className="w-full rounded-xl border-gray-200 focus:border-bb-red focus:ring-bb-red/20 py-3"
                                         placeholder="Your full name"
                                     />
+                                    {errors.guest_name && <p className="text-red-500 text-xs mt-1">{errors.guest_name}</p>}
                                 </div>
                                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                                     <div>
@@ -124,6 +111,7 @@ export default function Create() {
                                             className="w-full rounded-xl border-gray-200 focus:border-bb-red focus:ring-bb-red/20 py-3"
                                             placeholder="your@email.com"
                                         />
+                                        {errors.guest_email && <p className="text-red-500 text-xs mt-1">{errors.guest_email}</p>}
                                     </div>
                                     <div>
                                         <label className="block text-sm font-medium text-gray-700 mb-1">

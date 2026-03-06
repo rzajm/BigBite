@@ -1,9 +1,8 @@
 import SiteLayout from '@/Layouts/SiteLayout';
-import { Head, useForm } from '@inertiajs/react';
-import { useState } from 'react';
+import { Head, useForm, usePage } from '@inertiajs/react';
 
 export default function Create() {
-    const [submitted, setSubmitted] = useState(false);
+    const { flash } = usePage().props;
 
     const { data, setData, post, processing, errors, reset } = useForm({
         rating: 0,
@@ -13,12 +12,13 @@ export default function Create() {
     const handleSubmit = (e) => {
         e.preventDefault();
         if (data.rating === 0) return;
-        setSubmitted(true);
+        post(route('reviews.store'));
     };
 
     return (
         <SiteLayout>
-            <Head title="Write a Review" />            <section className="bg-bb-dark py-16 sm:py-20">
+            <Head title="Write a Review" />
+            <section className="bg-bb-dark py-16 sm:py-20">
                 <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
                     <h1 className="text-4xl sm:text-5xl font-bold font-display text-white mb-3">
                         Write a Review
@@ -35,24 +35,13 @@ export default function Create() {
 
             <section className="py-12 bg-bb-cream">
                 <div className="max-w-xl mx-auto px-4 sm:px-6 lg:px-8">
-                    {submitted ? (
+                    {flash?.success ? (
                         <div className="bg-white rounded-2xl shadow-md p-8 text-center">
                             <span className="text-5xl block mb-4">🎉</span>
                             <h2 className="text-2xl font-bold font-display text-bb-dark mb-2">
                                 Thank You!
                             </h2>
-                            <p className="text-gray-600 mb-6">
-                                Your review has been submitted and will be published after moderation.
-                            </p>
-                            <button
-                                onClick={() => {
-                                    setSubmitted(false);
-                                    reset();
-                                }}
-                                className="bg-bb-red hover:bg-bb-red-600 text-white px-6 py-3 rounded-full font-semibold transition-all duration-300"
-                            >
-                                Write Another Review
-                            </button>
+                            <p className="text-gray-600 mb-6">{flash.success}</p>
                         </div>
                     ) : (
                         <div className="bg-white rounded-2xl shadow-md p-8">
@@ -60,7 +49,8 @@ export default function Create() {
                                 How was your visit?
                             </h2>
 
-                            <form onSubmit={handleSubmit} className="space-y-6">                                <div>
+                            <form onSubmit={handleSubmit} className="space-y-6">
+                                <div>
                                     <label className="block text-sm font-medium text-gray-700 mb-3">
                                         Your Rating *
                                     </label>
@@ -92,7 +82,9 @@ export default function Create() {
                                     {data.rating === 0 && (
                                         <p className="text-xs text-gray-400 mt-1">Click a star to rate</p>
                                     )}
-                                </div>                                <div>
+                                    {errors.rating && <p className="text-red-500 text-xs mt-1">{errors.rating}</p>}
+                                </div>
+                                <div>
                                     <label className="block text-sm font-medium text-gray-700 mb-1">
                                         Your Review *
                                     </label>
@@ -104,6 +96,7 @@ export default function Create() {
                                         className="w-full rounded-xl border-gray-200 focus:border-bb-red focus:ring-bb-red/20"
                                         placeholder="Tell us about the food, service, atmosphere..."
                                     ></textarea>
+                                    {errors.comment && <p className="text-red-500 text-xs mt-1">{errors.comment}</p>}
                                 </div>
 
                                 <button

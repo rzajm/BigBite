@@ -74,9 +74,9 @@ export default function Gallery({ images = [] }) {
                                 onClick={() => setLightboxImage(img)}
                                 className="group relative rounded-2xl overflow-hidden shadow-sm hover:shadow-xl transition-all duration-300 aspect-[4/3]"
                             >
-                                <div className={`absolute inset-0 bg-gradient-to-br ${img.color} flex items-center justify-center`}>
+                                <div className={`absolute inset-0 bg-gradient-to-br ${colorMap[img.category] || 'from-gray-800 to-gray-900'} flex items-center justify-center`}>
                                     <span className="text-6xl group-hover:scale-110 transition-transform duration-300">
-                                        {img.emoji}
+                                        {emojiMap[img.category] || '📷'}
                                     </span>
                                 </div>
                                 <div className="absolute inset-0 bg-black/0 group-hover:bg-black/40 transition-colors duration-300 flex items-end">
@@ -105,8 +105,8 @@ export default function Gallery({ images = [] }) {
                         className="max-w-3xl w-full bg-bb-dark rounded-2xl overflow-hidden shadow-2xl"
                         onClick={(e) => e.stopPropagation()}
                     >
-                        <div className={`h-80 sm:h-96 bg-gradient-to-br ${lightboxImage.color} flex items-center justify-center`}>
-                            <span className="text-8xl">{lightboxImage.emoji}</span>
+                        <div className={`h-80 sm:h-96 bg-gradient-to-br ${colorMap[lightboxImage.category] || 'from-gray-800 to-gray-900'} flex items-center justify-center`}>
+                            <span className="text-8xl">{emojiMap[lightboxImage.category] || '📷'}</span>
                         </div>
                         <div className="p-6">
                             <h3 className="text-white font-bold font-display text-xl mb-1">

@@ -1,22 +1,5 @@
 import SiteLayout from '@/Layouts/SiteLayout';
-import { Head, Link } from '@inertiajs/react';
-
-const reviews = [
-    {
-        id: 1,
-        rating: 5,
-        comment: 'Absolutely amazing burgers! The BigBite Special is my new favorite. The truffle mayo is incredible.',
-        is_approved: true,
-        created_at: '2026-02-15',
-    },
-    {
-        id: 2,
-        rating: 4,
-        comment: 'Great falafel wrap, very fresh ingredients. Would love more vegetarian options.',
-        is_approved: false,
-        created_at: '2026-02-20',
-    },
-];
+import { Head, Link, router, usePage } from '@inertiajs/react';
 
 const statusInfo = {
     true: { label: 'Published', style: 'bg-green-100 text-green-800', icon: '✅' },
@@ -43,7 +26,15 @@ function StarRating({ rating, interactive = false, onChange }) {
     );
 }
 
-export default function Index() {
+export default function Index({ reviews = [] }) {
+    const { flash } = usePage().props;
+
+    const handleDelete = (id) => {
+        if (confirm('Are you sure you want to delete this review?')) {
+            router.delete(route('reviews.destroy', id));
+        }
+    };
+
     return (
         <SiteLayout>
             <Head title="My Reviews" />
@@ -66,12 +57,18 @@ export default function Index() {
                 <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
                     <div className="flex justify-end mb-6">
                         <Link
-                            href="/reviews/create"
+                            href={route('reviews.create')}
                             className="bg-bb-red hover:bg-bb-red-600 text-white px-6 py-2.5 rounded-full text-sm font-semibold transition-all duration-300 hover:scale-105 shadow-md"
                         >
                             + Write a Review
                         </Link>
                     </div>
+
+                    {flash?.success && (
+                        <div className="bg-green-50 border border-green-200 rounded-xl p-4 mb-6 text-green-800 text-sm font-medium">
+                            ✅ {flash.success}
+                        </div>
+                    )}
 
                     {reviews.length === 0 ? (
                         <div className="bg-white rounded-2xl shadow-sm p-12 text-center">
@@ -83,7 +80,7 @@ export default function Index() {
                                 Share your Big Bite experience with the world!
                             </p>
                             <Link
-                                href="/reviews/create"
+                                href={route('reviews.create')}
                                 className="inline-block bg-bb-red hover:bg-bb-red-600 text-white px-6 py-3 rounded-full font-semibold transition-all duration-300"
                             >
                                 Write Your First Review
@@ -119,10 +116,16 @@ export default function Index() {
                                         </p>
 
                                         <div className="flex items-center space-x-3">
-                                            <button className="text-sm text-bb-red hover:text-bb-red-600 font-medium transition-colors">
+                                            <Link
+                                                href={route('reviews.edit', review.id)}
+                                                className="text-sm text-bb-red hover:text-bb-red-600 font-medium transition-colors"
+                                            >
                                                 Edit
-                                            </button>
-                                            <button className="text-sm text-red-500 hover:text-red-700 font-medium transition-colors">
+                                            </Link>
+                                            <button
+                                                onClick={() => handleDelete(review.id)}
+                                                className="text-sm text-red-500 hover:text-red-700 font-medium transition-colors"
+                                            >
                                                 Delete
                                             </button>
                                         </div>

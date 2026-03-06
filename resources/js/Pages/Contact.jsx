@@ -1,6 +1,5 @@
 import SiteLayout from '@/Layouts/SiteLayout';
-import { Head, useForm } from '@inertiajs/react';
-import { useState } from 'react';
+import { Head, useForm, usePage } from '@inertiajs/react';
 
 const subjects = [
     'General Inquiry',
@@ -13,22 +12,21 @@ const subjects = [
 ];
 
 export default function Contact() {
-    const [submitted, setSubmitted] = useState(false);
+    const { flash } = usePage().props;
 
     const { data, setData, post, processing, errors, reset } = useForm({
         name: '',
         email: '',
+        phone: '',
         subject: '',
         message: '',
     });
 
     const handleSubmit = (e) => {
         e.preventDefault();
-        setSubmitted(true);
-        setTimeout(() => {
-            setSubmitted(false);
-            reset();
-        }, 3000);
+        post(route('contact.store'), {
+            onSuccess: () => reset(),
+        });
     };
 
     return (
@@ -57,14 +55,14 @@ export default function Contact() {
                                 Send us a Message
                             </h2>
 
-                            {submitted ? (
+                            {flash?.success ? (
                                 <div className="bg-green-50 border border-green-200 rounded-xl p-6 text-center">
                                     <span className="text-4xl block mb-3">✅</span>
                                     <h3 className="text-green-800 font-semibold text-lg mb-1">
                                         Message Sent!
                                     </h3>
                                     <p className="text-green-600 text-sm">
-                                        Thank you for reaching out. We'll get back to you as soon as possible.
+                                        {flash.success}
                                     </p>
                                 </div>
                             ) : (
@@ -81,6 +79,7 @@ export default function Contact() {
                                             className="w-full rounded-xl border-gray-200 focus:border-bb-red focus:ring-bb-red/20 py-3"
                                             placeholder="John Doe"
                                         />
+                                        {errors.name && <p className="text-red-500 text-xs mt-1">{errors.name}</p>}
                                     </div>
 
                                     <div>
@@ -94,6 +93,20 @@ export default function Contact() {
                                             required
                                             className="w-full rounded-xl border-gray-200 focus:border-bb-red focus:ring-bb-red/20 py-3"
                                             placeholder="john@example.com"
+                                        />
+                                        {errors.email && <p className="text-red-500 text-xs mt-1">{errors.email}</p>}
+                                    </div>
+
+                                    <div>
+                                        <label className="block text-sm font-medium text-gray-700 mb-1">
+                                            Phone
+                                        </label>
+                                        <input
+                                            type="tel"
+                                            value={data.phone}
+                                            onChange={(e) => setData('phone', e.target.value)}
+                                            className="w-full rounded-xl border-gray-200 focus:border-bb-red focus:ring-bb-red/20 py-3"
+                                            placeholder="+36 XX XXX XXXX"
                                         />
                                     </div>
 
@@ -113,8 +126,7 @@ export default function Contact() {
                                                     {s}
                                                 </option>
                                             ))}
-                                        </select>
-                                    </div>
+                                        </select>                                        {errors.subject && <p className="text-red-500 text-xs mt-1">{errors.subject}</p>}                                    </div>
 
                                     <div>
                                         <label className="block text-sm font-medium text-gray-700 mb-1">
@@ -128,6 +140,7 @@ export default function Contact() {
                                             className="w-full rounded-xl border-gray-200 focus:border-bb-red focus:ring-bb-red/20"
                                             placeholder="Tell us how we can help..."
                                         ></textarea>
+                                        {errors.message && <p className="text-red-500 text-xs mt-1">{errors.message}</p>}
                                     </div>
 
                                     <button
