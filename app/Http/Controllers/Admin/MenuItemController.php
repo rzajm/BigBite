@@ -7,6 +7,7 @@ use App\Models\Allergen;
 use App\Models\Category;
 use App\Models\MenuItem;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 use Inertia\Inertia;
 
@@ -99,6 +100,9 @@ class MenuItemController extends Controller
         $validated['slug'] = Str::slug($validated['name']);
 
         if ($request->hasFile('image')) {
+            if ($menuItem->image) {
+                Storage::disk('public')->delete($menuItem->image);
+            }
             $validated['image'] = $request->file('image')->store('menu-items', 'public');
         }
 
@@ -114,6 +118,9 @@ class MenuItemController extends Controller
 
     public function destroy(MenuItem $menuItem)
     {
+        if ($menuItem->image) {
+            Storage::disk('public')->delete($menuItem->image);
+        }
         $menuItem->delete();
 
         return redirect()->route('admin.menu-items.index')

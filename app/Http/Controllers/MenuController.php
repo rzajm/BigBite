@@ -29,4 +29,22 @@ class MenuController extends Controller
             'allergens' => $allergens,
         ]);
     }
+
+    public function show(MenuItem $menuItem)
+    {
+        $menuItem->load('category', 'allergens');
+
+        $relatedItems = MenuItem::with('category')
+            ->where('category_id', $menuItem->category_id)
+            ->where('id', '!=', $menuItem->id)
+            ->where('is_available', true)
+            ->where('status', 'active')
+            ->limit(4)
+            ->get();
+
+        return Inertia::render('Menu/Show', [
+            'menuItem' => $menuItem,
+            'relatedItems' => $relatedItems,
+        ]);
+    }
 }

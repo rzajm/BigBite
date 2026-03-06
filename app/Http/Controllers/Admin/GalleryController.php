@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\GalleryImage;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 use Inertia\Inertia;
 
 class GalleryController extends Controller
@@ -61,6 +62,9 @@ class GalleryController extends Controller
         ]);
 
         if ($request->hasFile('image')) {
+            if ($gallery->image) {
+                Storage::disk('public')->delete($gallery->image);
+            }
             $validated['image'] = $request->file('image')->store('gallery', 'public');
         }
 
@@ -72,6 +76,9 @@ class GalleryController extends Controller
 
     public function destroy(GalleryImage $gallery)
     {
+        if ($gallery->image) {
+            Storage::disk('public')->delete($gallery->image);
+        }
         $gallery->delete();
 
         return redirect()->route('admin.gallery.index')
